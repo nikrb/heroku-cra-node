@@ -7,7 +7,8 @@ class App extends Component {
     super(props);
     this.state = {
       message: null,
-      fetching: true
+      fetching: true,
+      websocket_message: ""
     };
   }
 
@@ -24,6 +25,8 @@ class App extends Component {
     };
     socket.onmessage = (message) => {
       console.log( "websocket message:", message);
+      const msg = JSON.parse( message.data);
+      this.setState( {websocket_message: msg.message});
     };
     fetch('/api')
       .then(response => {
@@ -62,6 +65,12 @@ class App extends Component {
           {this.state.fetching
             ? 'Fetching message from API'
             : this.state.message}
+        </p>
+        <p className="App-intro">
+          {this.state.websocket_message.length
+            ? `Hello from websocket:${this.state.websocket_message}`
+            : "Waiting for websocket"
+          }
         </p>
       </div>
     );
