@@ -1,3 +1,6 @@
+add websocket
+
+
 # create-react-app with a Node server on Heroku
 
 A minimal example of using a Node backend (server for API, proxy, & routing) with a [React frontend](https://github.com/facebookincubator/create-react-app).
@@ -53,7 +56,7 @@ This deployment will automatically:
 If an app was previously deployed with [create-react-app-buildpack](https://github.com/mars/create-react-app-buildpack), then a few steps are required to migrate the app to this architecture:
 
 1. Remove **create-react-app-buildpack** from the app; [heroku/nodejs buildpack](https://devcenter.heroku.com/articles/nodejs-support#activation) will be automatically activated
-  
+
     ```bash
     heroku buildpacks:clear
     ```
@@ -67,13 +70,13 @@ If an app was previously deployed with [create-react-app-buildpack](https://gith
     ```
 1. Create a root [`package.json`](package.json), [`server/`](server/), & [`.gitignore`](.gitignore) modeled after the code in this repo
 1. Commit and deploy ♻️
-  
+
     ```bash
     git add -A
     git commit -m 'Migrate from create-react-app-buildpack to Node server'
     git push heroku master
     ```
-  
+
 
 ## Local Development
 
