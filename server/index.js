@@ -1,4 +1,6 @@
 const express = require('express');
+const http = require( 'http');
+const WebSocket = require( 'ws');
 const path = require('path');
 
 const app = express();
@@ -18,6 +20,20 @@ app.get('*', function(request, response) {
   response.sendFile(path.resolve(__dirname, '../react-ui/build', 'index.html'));
 });
 
-app.listen(PORT, function () {
+const server = http.createServer( app);
+
+server.listen(PORT, function () {
   console.log(`Listening on port ${PORT}`);
+});
+
+const ws = new WebSocket.Server({server});
+ws.on( 'connection', (sock, req) => {
+  // console.log( "websocket on connection", sock, req);
+  sock.send( JSON.stringify( { success: true, message: "connected"}));
+  sock.on( 'message', (msg) => {
+    // console.log( "socket message:", msg);
+    const json = JSON.parse( msg)
+    console.log( "got data:", json);
+    sock.send( JSON.stringify( {success: true, message: "ack"}));
+  });
 });

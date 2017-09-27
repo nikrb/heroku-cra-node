@@ -12,6 +12,19 @@ class App extends Component {
   }
 
   componentDidMount() {
+    console.log( "component did mount with app env:", process.env.NODE_ENV);
+    let ws_url = 'ws://pure-thicket-70312.herokuapp.com/:5000';
+    if( process.env.NODE_ENV === 'development'){
+      ws_url = "ws://localhost:5000";
+    }
+    const socket = new WebSocket( ws_url);
+    socket.onopen = () => {
+      console.log( "socket is open");
+      socket.send( JSON.stringify( { action: "get me the data"}));
+    };
+    socket.onmessage = (message) => {
+      console.log( "websocket message:", message);
+    };
     fetch('/api')
       .then(response => {
         if (!response.ok) {
