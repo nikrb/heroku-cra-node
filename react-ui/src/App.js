@@ -8,12 +8,13 @@ class App extends Component {
     this.state = {
       message: null,
       fetching: true,
-      websocket_message: ""
+      websocket_message: "",
+      mongo_data: []
     };
   }
 
   componentDidMount() {
-    console.log( "component did mount with app env:", process.env.NODE_ENV);
+    console.log( "component did mount with node env:", process.env.NODE_ENV);
     let ws_url = 'ws://pure-thicket-70312.herokuapp.com/:5000';
     if( process.env.NODE_ENV === 'development'){
       ws_url = "ws://localhost:5000";
@@ -28,6 +29,17 @@ class App extends Component {
       const msg = JSON.parse( message.data);
       this.setState( {websocket_message: msg.message});
     };
+    fetch( '/api/test')
+    .then( (response) => {
+      if( !response.ok){
+        throw new Error( `api/test failed:${response.status}`);
+      }
+      return response.json();
+    })
+    .then( json => {
+      console.log( "mongo test data:", json);
+      this.setState( { mongo_data: json});
+    });
     fetch('/api')
     .then(response => {
       if (!response.ok) {
@@ -49,6 +61,7 @@ class App extends Component {
   }
 
   render() {
+    const {mongo_data} = this.state;
     return (
       <div className="App">
         <div className="App-header">
@@ -65,6 +78,9 @@ class App extends Component {
           {this.state.fetching
             ? 'Fetching message from API'
             : this.state.message}
+        </p>
+        <p className="App-intro" >
+          test data (name):{mongo_data.length?mongo_data[0].name:"not found"}
         </p>
         <p className="App-intro">
           {this.state.websocket_message.length

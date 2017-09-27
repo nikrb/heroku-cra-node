@@ -2,12 +2,35 @@ const express = require('express');
 const http = require( 'http');
 const WebSocket = require( 'ws');
 const path = require('path');
+const MongoClient = require('mongodb').MongoClient;
+const ObjectId = require('mongodb').ObjectID;
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+let db = null;
+MongoClient.connect( "mongodb://nik:nik9@ds149954.mlab.com:49954/fcc", function(err, dbc) {
+  if( err){
+    console.log( "mongo connect error:", err);
+  } else {
+    db = dbc;
+  }
+});
+
+const fetchTestData = () => {
+  return db.collection( 'test')
+  .find({})
+  .toArray();
+};
 
 // Priority serve any static files.
 app.use(express.static(path.resolve(__dirname, '../react-ui/build')));
+
+app.get( '/api/test', function( req, res){
+  fetchTestData()
+  .then( (data) => {
+    res.send( data);
+  });
+});
 
 // Answer API requests.
 app.get('/api', function (req, res) {
