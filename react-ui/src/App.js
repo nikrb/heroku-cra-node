@@ -15,7 +15,7 @@ class App extends Component {
 
   componentDidMount() {
     console.log( "component did mount with node env:", process.env.NODE_ENV);
-    let ws_url = 'ws://pure-thicket-70312.herokuapp.com/:5000';
+    let ws_url = 'ws://murmuring-springs-39820.herokuapp.com/:5000';
     if( process.env.NODE_ENV === 'development'){
       ws_url = "ws://localhost:5000";
     }
